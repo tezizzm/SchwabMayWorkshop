@@ -1,0 +1,10 @@
+---
+applications:
+- name: dotnet-core-ui
+buildpack: https://github.com/cloudfoundry/dotnet-core-buildpack
+random-route: true
+instances: 1
+memory: 256M
+services:
+- myDiscoveryService
+- myHystrixService
