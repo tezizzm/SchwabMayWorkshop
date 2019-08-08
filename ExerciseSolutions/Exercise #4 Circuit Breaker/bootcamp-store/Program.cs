@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
 using Steeltoe.Extensions.Configuration.CloudFoundry;
-using Steeltoe.Extensions.Logging;
 
 namespace bootcamp_store
 {
@@ -10,21 +8,13 @@ namespace bootcamp_store
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost CreateWebHostBuilder(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseCloudFoundryHosting(5555)
                 .AddCloudFoundry()
-                .UseStartup<Startup>()
-                .ConfigureLogging((builderContext, loggingBuilder) =>
-                {
-                    loggingBuilder.AddConfiguration(builderContext.Configuration.GetSection("Logging"));
-
-                    // Add Steeltoe dynamic console logger
-                    loggingBuilder.AddDynamicConsole();
-                })
-                .Build();
+                .UseStartup<Startup>();
     }
 }

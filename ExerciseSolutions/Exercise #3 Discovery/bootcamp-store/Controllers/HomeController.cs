@@ -5,30 +5,30 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using bootcamp_store.Models;
 using Steeltoe.Common.Discovery;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace bootcamp_store.Controllers
 {
     public class HomeController : Controller
     {
-        //private static HttpClient client = new HttpClient();
-        DiscoveryHttpClientHandler handler;
+        readonly DiscoveryHttpClientHandler _handler;
 
         public HomeController(IDiscoveryClient client)
         {
-            handler = new DiscoveryHttpClientHandler(client);
+            _handler = new DiscoveryHttpClientHandler(client);
         }
 
         public async Task<IActionResult> Index()
         {
-            var client = new HttpClient(handler, false);
-            var result = await client.GetAsync("https://dotnet-core-api/api/products");
-            var products = await result.Content.ReadAsAsync<string[]>();
-            ViewData["products"] = products;
+            var client = new HttpClient(_handler, true);
+            var jsonString = await client.GetStringAsync("https://dotnet-core-api-mk/api/products");
+            var products = JsonConvert.DeserializeObject<IList<Product>>(jsonString);
             foreach (var product in products)
             {
                 Console.WriteLine(product);
             }
-            return View();
+            return View(products);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

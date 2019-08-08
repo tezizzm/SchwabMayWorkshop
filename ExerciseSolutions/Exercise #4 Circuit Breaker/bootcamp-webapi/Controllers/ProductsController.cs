@@ -1,27 +1,27 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace bootcamp_webapi.Controllers
-{   
+{
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : Controller
     {
-        private readonly IConfigurationRoot _config;
-        public ProductsController(IConfigurationRoot config)
+        private readonly ProductContext _context;
+        public ProductsController([FromServices] ProductContext context)
         {
-            _config = config;
+            _context = context;
         }
 
         // GET api/products
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            Console.WriteLine($"product1 is {_config["product1"]}");
-            Console.WriteLine($"product2 is {_config["product2"]}");
-            return new[] {$"{_config["product1"]}", $"{_config["product2"]}"};
+            var connection = _context.Database.GetDbConnection();
+            Console.WriteLine($"Retrieving product catalog from {connection.DataSource}/{connection.Database}");
+            return Json(_context.Products.ToList());
         }
     }
 }

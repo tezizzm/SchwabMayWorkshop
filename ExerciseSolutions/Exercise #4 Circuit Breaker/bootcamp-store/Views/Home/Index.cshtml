@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IList<Product>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -10,17 +12,27 @@
 </div>
 <div class="container">
     <h2>Products</h2>
-    @if (ViewData["Products"] is string[] products)
-    {
-        foreach (var product in products)
-        {
-            <div class="row">
-                <div class="col-xs-12">
-                    <ul>
-                        <li>@product</li>
-                    </ul>
-                </div>
-            </div>
-        }
-    }
+    <div class="row">
+        <div class="col-xs-12 table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Inventory</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var product in Model)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Category</td>
+                            <td>@product.Inventory</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

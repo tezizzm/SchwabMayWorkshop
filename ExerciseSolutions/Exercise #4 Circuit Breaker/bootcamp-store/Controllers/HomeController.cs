@@ -20,9 +20,9 @@ namespace bootcamp_store.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewData["products"] = await _productService.RetrieveProducts();
+            var products = await _productService.RetrieveProducts();
             _logger.LogDebug("Retrieved Products");
-            return View();
+            return View(products);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
