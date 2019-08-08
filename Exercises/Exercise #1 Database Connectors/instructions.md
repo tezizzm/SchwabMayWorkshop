@@ -6,7 +6,7 @@ Explore Steeltoe Connectors by connecting to an external persistence store.
 
 ## Expected Results
 
-Create our backed microservice, a Web API application, bind a persistent store to it and utilize the Steeltoe connectors to discover and connect the Web API to the persistent store.
+Create our backed microservice, a Web API application, bind it to a persistent store and utilize the Steeltoe connectors to discover and connect the Web API to the persistent store.
 
 ## Introduction
 
@@ -29,8 +29,6 @@ In this exercise we create a Web API application that will serve as the backend 
     dotnet add package Steeltoe.CloudFoundry.Connector.EFCore --version 2.2.0
 
     dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 2.2.6
-
-    dotnet restore
     ```
 
 5. In the Program.cs class add the following using statement and edit the CreateWebHostBuilder method in the following way.  The using statement allows us to use types of a given namespace without fully qualifying a given type [see](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/using-directive) for information on the c# using statement.
@@ -49,7 +47,7 @@ In this exercise we create a Web API application that will serve as the backend 
 
     **Take note of the UseCloudFoundryHosting which is an extension that allows us to listen on a configured port.**
 
-6. Create a file named Product.cs that will serve as the entity class that represents our store's catalog of products.  The class should have four fields: Id (long), Category (string), Name (string) and Inventory (int).  When complete the class should have the following definition:
+6. Create a file named `Product.cs` that will serve as the entity class that represents our store's catalog of products.  The class should have four fields: Id (long), Category (string), Name (string) and Inventory (int).  When complete the class should have the following definition:
 
     ```c#
     namespace bootcamp_webapi
@@ -64,7 +62,7 @@ In this exercise we create a Web API application that will serve as the backend 
     }
     ```
 
-7. Create a file named ProductContext.cs that will serve as our context class that will be utilized by Entity Framework to store our in memory objects.  The class should extend DbContext, define 2 constructors, one without parameters and another which takes DbContextOptions and creates a DbSet of Products.  Finally the class will have override the OnModelCreating method.  In this method we will set up data to be seeded when we later create and execute our database migrations.  For a specific discussion on DbContext see the following [article](https://docs.microsoft.com/en-us/ef/core/miscellaneous/configuring-dbcontext) and to further look at Entity Framework Core see the following [article](https://docs.microsoft.com/en-us/ef/core/).  When complete it should have the following definition.
+7. Create a file named `ProductContext.cs` that will serve as our context class that will be utilized by Entity Framework to store our in memory objects.  The class should extend DbContext, define 2 constructors, one without parameters and another which takes DbContextOptions and creates a DbSet of Products.  Finally the class will have override the OnModelCreating method.  In this method we will set up data to be seeded when we later create and execute our database migrations.  For a specific discussion on DbContext see the following [article](https://docs.microsoft.com/en-us/ef/core/miscellaneous/configuring-dbcontext) and to further look at Entity Framework Core see the following [article](https://docs.microsoft.com/en-us/ef/core/).  When complete it should have the following definition.
 
     ```c#
     using Microsoft.EntityFrameworkCore;
@@ -139,7 +137,7 @@ In this exercise we create a Web API application that will serve as the backend 
         }, isMySqlBound ? ServiceLifetime.Scoped : ServiceLifetime.Singleton);
         ```
 
-10. Database migrations allow us to keep our database in sync without our model.  Create a file called EnsureMigration.cs.  We will utilize this class when we set up our middleware pipeline to make sure all Entity Framework Migrations have been executed.  The class should have the following definition.  For a discussion on Entity Framework Migrations see the following [article](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/)
+10. Database migrations allow us to keep our database in sync without our model.  Create a file called `EnsureMigration.cs`.  We will utilize this class when we set up our middleware pipeline to make sure all Entity Framework Migrations have been executed.  The class should have the following definition.  For a discussion on Entity Framework Migrations see the following [article](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/)
 
     ```c#
     using System.Data.Common;
@@ -174,7 +172,7 @@ In this exercise we create a Web API application that will serve as the backend 
 
 12. We must now create the actual migrations themselves.  To do this we run the command `dotnet ef migrations add InitialCreation` which will create a folder named Migrations in our solution.  This folder will hold the initial migration files that create our database based on the definition of our Product context and entity class.  For further reading on [creating migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/#create-a-migration)
 
-13. A controller is used to define and group a set of actions which are methods that handle incoming requests.  For an in depth view of ASP.NET Core MVC [see](https://docs.microsoft.com/en-us/aspnet/core/mvc/overview?view=aspnetcore-2.1) and for a Controller specific discussion [see](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/actions?view=aspnetcore-2.1).  In the controllers folder create a new class and name it ProductsController.cs and then paste the following contents into the file:
+13. A controller is used to define and group a set of actions which are methods that handle incoming requests.  For an in depth view of ASP.NET Core MVC [see](https://docs.microsoft.com/en-us/aspnet/core/mvc/overview?view=aspnetcore-2.1) and for a Controller specific discussion [see](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/actions?view=aspnetcore-2.1).  In the controllers folder create a new class and name it `ProductsController.cs` and then paste the following contents into the file:
 
     ```c#
     using System;
@@ -228,7 +226,7 @@ In this exercise we create a Web API application that will serve as the backend 
 
     ```yml
     applications:
-    - name: dotnet-core-api-{initials}
+    - name: bootcamp-api-{initials}
       random-route: true
       buildpacks:
       - https://github.com/cloudfoundry/dotnet-core-buildpack
@@ -238,7 +236,7 @@ In this exercise we create a Web API application that will serve as the backend 
         ASPNETCORE_ENVIRONMENT: development
       #### Uncomment following two lines if service is available from the previous step
       #services:
-      #- product-db-{initials}
+      #- products-db-{initials}
     ```
 
 17. Run the cf push command to build, stage and run your application on PCF.  Ensure you are in the same directory as your manifest file and type `cf push`.

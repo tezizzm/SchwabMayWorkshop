@@ -1,5 +1,5 @@
 applications:
-- name: dotnet-core-api-mk
+- name: bootcamp-api-mk
   random-route: true
   buildpacks:
   - https://github.com/cloudfoundry/dotnet-core-buildpack
@@ -8,4 +8,4 @@ applications:
   env:
     ASPNETCORE_ENVIRONMENT: development
   services:
-  - product-db-mk
+  - products-db-mk

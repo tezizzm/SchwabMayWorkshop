@@ -57,7 +57,7 @@ This exercise helps us understand how to wrap our external calls in Hystrix Comm
             {
                 var client = new HttpClient(_handler, false);
                 _logger.LogDebug("Processing rest api call to get products");
-                var jsonString = await client.GetStringAsync("https://dotnet-core-api-mk/api/products");
+                var jsonString = await client.GetStringAsync("https://bootcamp-api-mk/api/products");
                 var products = JsonConvert.DeserializeObject<IList<Product>>(jsonString);
 
                 foreach (var product in products)

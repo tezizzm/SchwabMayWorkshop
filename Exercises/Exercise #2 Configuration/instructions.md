@@ -21,14 +21,21 @@ In this exercise we explore how Configuration Server pulls configuration from a 
 
 2. Edit the Program.cs class.
 
-   1. add the following using statements:
+   1. Remove the following using statement:
+
+        ```c#
+        using Steeltoe.Extensions.Configuration.CloudFoundry;
+        ```
+
+   2. Add the following using statements:
 
         ```c#
         using Microsoft.Extensions.Logging;
         using Steeltoe.Extensions.Configuration.ConfigServer;
+        using Microsoft.Extensions.DependencyInjection;
         ```
 
-   2. Create a method to configure the LogBuilder and edit the CreateWebHostBuilder method to utilize the extension method to add Config Server:
+   3. Create a method to configure the LogBuilder and edit the CreateWebHostBuilder method to utilize the extension method to add Config Server:
 
         ```c#
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
@@ -76,7 +83,6 @@ In this exercise we explore how Configuration Server pulls configuration from a 
    2. In the ConfigureServices method make the following code changes: use an extension method to add swagger and the Config Server provider to the DI Container with the following lines of code *before* the following line of code `services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);`.
 
         ```c#
-        services.AddConfiguration(Configuration);
         services.AddSwagger();
         ```
 
@@ -115,12 +121,12 @@ In this exercise we explore how Configuration Server pulls configuration from a 
       "AllowedHosts": "*",
       "spring": {
         "application": {
-          "name": "dotnet-core-api-{initials}"
+          "name": "bootcamp-api-{initials}"
         }
       },
       "cloud": {
         "config": {
-          "name": "dotnet-core-api-{initials}",
+          "name": "bootcamp-api-{initials}",
           "env": "development",
           "validateCertificates" : false
         }
@@ -128,7 +134,7 @@ In this exercise we explore how Configuration Server pulls configuration from a 
     }
     ```
 
-6. In the application root create a file and name it config.json and edit it in the following way.  The settings in this file will tell our instance of Spring Cloud Config that we will be connecting to a git repository at the location specified in the uri field.
+6. In the application root create a file and name it `config.json` and edit it in the following way.  The settings in this file will tell our instance of Spring Cloud Config that we will be connecting to a git repository at the location specified in the uri field.
 
     ```json
     {
@@ -157,7 +163,8 @@ In this exercise we explore how Configuration Server pulls configuration from a 
      env:
        ASPNETCORE_ENVIRONMENT: development
      services:
-     - product-db-mk
+      #### Uncomment following line if service is available
+      #- products-db-{initials}
      - myConfigServer
     ```
 

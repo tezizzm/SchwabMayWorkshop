@@ -1,1 +1,0 @@
-cf create-service p.mysql db-small product-db-mk

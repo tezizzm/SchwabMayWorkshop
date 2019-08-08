@@ -157,7 +157,7 @@ We now change focus to a front end application that discovers our products API m
             public async Task<IActionResult> Index()
             {
                 var client = new HttpClient(_handler, true);
-                var jsonString = await client.GetStringAsync("https://dotnet-core-api-mk/api/products");
+                var jsonString = await client.GetStringAsync("https://bootcamp-api-{initials}/api/products");
                 var products = JsonConvert.DeserializeObject<IList<Product>>(jsonString);
                 foreach (var product in products)
                 {
@@ -178,7 +178,7 @@ We now change focus to a front end application that discovers our products API m
 9. Navigate to the views folder and edit the View file named Index.cshtml file to match the below snippet.  This file uses a mix of html and Razor syntax to iterate over and display the products returned from the Products API.  You can read about Razor Syntax [here](https://docs.microsoft.com/en-us/aspnet/core/mvc/views/razor?view=aspnetcore-2.1)
 
     ```c#
-    @model Product[]
+    @model IList<Product>
 
     @{
         ViewData["Title"] = "Home Page";
@@ -193,7 +193,7 @@ We now change focus to a front end application that discovers our products API m
     <div class="container">
         <h2>Products</h2>
         <div class="row">
-            <div>
+            <div class="col-xs-12 table-responsive">
                 <table class="table">
                     <thead>
                         <tr>

@@ -1,13 +1,20 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using Steeltoe.CloudFoundry.Connector;
 using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
 using Steeltoe.CloudFoundry.Connector.Services;
+using Steeltoe.Extensions.Configuration.ConfigServer;
 using NJsonSchema;
 using NSwag.AspNetCore;
 using Steeltoe.Discovery.Client;
@@ -28,17 +35,17 @@ namespace bootcamp_webapi
         {
             var isMySqlBound = Configuration.GetServiceInfos<MySqlServiceInfo>().Any();
             services.AddDbContext<ProductContext>(options =>
-            {
-                if (isMySqlBound)
-                    options.UseMySql(Configuration);
-                else
-                    options.UseSqlite("DataSource=:memory:");
+                {
+                    if (isMySqlBound)
+                        options.UseMySql(Configuration);
+                    else
+                        options.UseSqlite("DataSource=:memory:");
 
-            }, isMySqlBound ? ServiceLifetime.Scoped : ServiceLifetime.Singleton);
+                }, isMySqlBound ? ServiceLifetime.Scoped : ServiceLifetime.Singleton);
 
             services.AddSwagger();
             services.AddDiscoveryClient(Configuration);
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,15 +63,15 @@ namespace bootcamp_webapi
 
             app.UseHttpsRedirection();
 
-             var apiSettings = Configuration
+            var apiSettings = Configuration
                 .GetSection("api")
                 .Get<ApiSettings>();
 
             app.UseSwaggerUi3WithApiExplorer(settings =>
-            {
-                settings.GeneratorSettings.DefaultPropertyNameHandling = 
-                    PropertyNameHandling.CamelCase;
-                settings.PostProcess = document => 
+                {
+                    settings.GeneratorSettings.DefaultPropertyNameHandling =
+                        PropertyNameHandling.CamelCase;
+                    settings.PostProcess = document =>
                     {
                         document.Info.Version = apiSettings.Version;
                         document.Info.Title = apiSettings.Title;
@@ -72,9 +79,9 @@ namespace bootcamp_webapi
                         document.Schemes.Clear();
                         document.Schemes.Add(NSwag.SwaggerSchema.Https);
                     };
-                settings.SwaggerUiRoute = "";
-            });
-
+                    settings.SwaggerUiRoute = "";
+                });
+                
             app.UseDiscoveryClient();
             app.UseMvc();
         }

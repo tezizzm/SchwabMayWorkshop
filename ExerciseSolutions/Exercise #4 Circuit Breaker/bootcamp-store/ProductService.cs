@@ -32,7 +32,7 @@ namespace bootcamp_store.Service
         {
             var client = new HttpClient(_handler, false);
             _logger.LogDebug("Processing rest api call to get products");
-            var jsonString = await client.GetStringAsync("https://dotnet-core-api-mk/api/products");
+            var jsonString = await client.GetStringAsync("https://BOOTCAMP-API-MAK/api/products");
             var products = JsonConvert.DeserializeObject<IList<Product>>(jsonString);
 
             foreach (var product in products)
